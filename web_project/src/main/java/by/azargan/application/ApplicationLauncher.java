@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.DispatcherServlet;
  */
 @Slf4j
 @Configurable
+@ComponentScan(basePackages = "by.azargan.config")
 public class ApplicationLauncher implements WebApplicationInitializer {
 
     private final String CONFIG_LOCATION = "by.azargan.config";
@@ -26,7 +28,7 @@ public class ApplicationLauncher implements WebApplicationInitializer {
     public void onStartup(ServletContext servletContext)
             throws ServletException {
         log.info("Start initialise application context");
-        WebApplicationContext context = getContext();
+        WebApplicationContext context = getContext(servletContext);
         servletContext.addListener(new ContextLoaderListener(context));
 
         log.info("Add dispatcher servlet");
@@ -37,9 +39,10 @@ public class ApplicationLauncher implements WebApplicationInitializer {
         dispatcher.addMapping(MAPPING_URL);
     }
 
-    private AnnotationConfigWebApplicationContext getContext() {
+    private AnnotationConfigWebApplicationContext getContext(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context =
                 new AnnotationConfigWebApplicationContext();
+        context.setServletContext(servletContext);
         context.setConfigLocation(CONFIG_LOCATION);
         return context;
     }
