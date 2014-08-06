@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+sourceCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'test.Test'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://repo.spring.io/snapshot"
+    }
+}
+
+dependencies {
+    compile("org.springframework:spring-context:4.1.0.BUILD-SNAPSHOT") {
+        exclude module: 'commons-logging'
+    }
+    compile("org.slf4j:jcl-over-slf4j:1.7.7")
+    compile("ch.qos.logback:logback-classic:1.1.2")
+    compile("org.projectlombok:lombok:1.14.4")
+    testCompile("org.springframework:spring-test:4.1.0.BUILD-SNAPSHOT")
+    testCompile("junit:junit:4.10")
+}
