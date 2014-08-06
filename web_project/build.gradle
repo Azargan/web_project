@@ -1,11 +1,8 @@
-apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'jetty'
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-if (!hasProperty('mainClass')) {
-    ext.mainClass = 'test.Test'
-}
 
 repositories {
     mavenCentral()
@@ -18,9 +15,17 @@ dependencies {
     compile("org.springframework:spring-context:4.1.0.BUILD-SNAPSHOT") {
         exclude module: 'commons-logging'
     }
+    compile("org.springframework:spring-webmvc:4.1.0.BUILD-SNAPSHOT")
     compile("org.slf4j:jcl-over-slf4j:1.7.7")
     compile("ch.qos.logback:logback-classic:1.1.2")
     compile("org.projectlombok:lombok:1.14.4")
+    compile("javax.servlet:javax.servlet-api:3.1.0")
     testCompile("org.springframework:spring-test:4.1.0.BUILD-SNAPSHOT")
     testCompile("junit:junit:4.10")
 }
+
+jettyRunWar.contextPath = 'web'
+httpPort = 8888
+stopPort = 8889
+stopKey = 'stopThisShit'
+jettyRun.scanIntervalSeconds = 1
