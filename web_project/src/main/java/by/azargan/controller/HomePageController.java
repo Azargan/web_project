@@ -13,11 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class HomePageController {
 
-    @RequestMapping(value = "/")
-    public String showHomePage(Model model) {
-        log.info("Show Home page");
-        model.addAttribute("message", "Message from JSP");
+    @RequestMapping(value = {"home"})
+    public String showThymeleafHome(Model model) {
+        log.info("Show Thymeleaf Home Page");
         return "home";
+    }
+
+    @RequestMapping(value = {"/"})
+    public String showJsp(Model model) {
+        log.info("Show JSP page");
+        return "index";
     }
 
 }
