@@ -1,5 +1,15 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-cargo-plugin:1.5'
+    }
+}
+
 apply plugin: 'war'
-apply plugin: 'jetty'
+apply plugin: 'cargo'
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -11,21 +21,43 @@ repositories {
     }
 }
 
+def cargoVersion = '1.4.9'
+def springVersion = '4.1.0.BUILD-SNAPSHOT'
+def thymeleafVersion = '2.1.3.RELEASE'
+
 dependencies {
-    compile("org.springframework:spring-context:4.1.0.BUILD-SNAPSHOT") {
+    compile("org.springframework:spring-context:$springVersion") {
         exclude module: 'commons-logging'
     }
-    compile("org.springframework:spring-webmvc:4.1.0.BUILD-SNAPSHOT")
+    compile("org.springframework:spring-webmvc:$springVersion")
     compile("org.slf4j:jcl-over-slf4j:1.7.7")
     compile("ch.qos.logback:logback-classic:1.1.2")
     compile("org.projectlombok:lombok:1.14.4")
     compile("javax.servlet:javax.servlet-api:3.1.0")
-    testCompile("org.springframework:spring-test:4.1.0.BUILD-SNAPSHOT")
+    compile("org.thymeleaf:thymeleaf:$thymeleafVersion")
+    compile("org.thymeleaf:thymeleaf-spring4:$thymeleafVersion")
+    testCompile("org.springframework:spring-test:$springVersion")
     testCompile("junit:junit:4.10")
+    cargo "org.codehaus.cargo:cargo-core-uberjar:$cargoVersion",
+          "org.codehaus.cargo:cargo-ant:$cargoVersion"
 }
 
-jettyRunWar.contextPath = 'web'
-httpPort = 8888
-stopPort = 8889
-stopKey = 'stopThisShit'
-jettyRun.scanIntervalSeconds = 1
+cargo {
+
+    containerId = 'tomcat8x'
+    port = 8080
+
+    deployable {
+        context = 'webapp'
+    }
+
+    remote {
+        hostname = 'localhost'
+        username = 'azargan'
+        password = 'mogilev'
+    }
+
+}
+
+cargoDeployRemote.dependsOn war
+cargoRedeployRemote.dependsOn war
