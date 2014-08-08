@@ -10,20 +10,33 @@ buildscript {
 
 apply plugin: 'war'
 apply plugin: 'cargo'
-apply plugin: 'jetty'
+apply plugin: 'idea'
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url "http://repo.spring.io/snapshot"
+    }
+    maven {
+        url "http://m2.neo4j.org/releases/"
     }
 }
 
 def cargoVersion = '1.4.9'
 def springVersion = '4.1.0.BUILD-SNAPSHOT'
+def springNeo4jVersion = '3.2.0.BUILD-SNAPSHOT'
+def neo4jServerVersion = '2.1.3'
 def thymeleafVersion = '2.1.3.RELEASE'
 def jstlVersion = '1.2'
 
@@ -39,6 +52,10 @@ dependencies {
     compile("org.thymeleaf:thymeleaf:$thymeleafVersion")
     compile("org.thymeleaf:thymeleaf-spring4:$thymeleafVersion")
     compile("jstl:jstl:$jstlVersion")
+    compile("org.springframework.data:spring-data-neo4j:$springNeo4jVersion")
+    compile("org.neo4j.app:neo4j-server:$neo4jServerVersion") {
+        exclude module: 'commons-logging'
+    }
     testCompile("org.springframework:spring-test:$springVersion")
     testCompile("junit:junit:4.10")
     cargo "org.codehaus.cargo:cargo-core-uberjar:$cargoVersion",
@@ -64,9 +81,3 @@ cargo {
 
 cargoDeployRemote.dependsOn war
 cargoRedeployRemote.dependsOn war
-
-jettyRunWar.contextPath = 'web'
-httpPort = 8888
-stopPort = 8889
-stopKey = 'stopThisShit'
-jettyRun.scanIntervalSeconds = 1
