@@ -10,6 +10,7 @@ buildscript {
 
 apply plugin: 'war'
 apply plugin: 'cargo'
+apply plugin: 'jetty'
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -63,3 +64,9 @@ cargo {
 
 cargoDeployRemote.dependsOn war
 cargoRedeployRemote.dependsOn war
+
+jettyRunWar.contextPath = 'web'
+httpPort = 8888
+stopPort = 8889
+stopKey = 'stopThisShit'
+jettyRun.scanIntervalSeconds = 1

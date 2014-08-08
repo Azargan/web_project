@@ -1,6 +1,5 @@
 package by.azargan.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import org.thymeleaf.templateresolver.TemplateResolver;
 
 /**
  *
@@ -34,8 +32,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         resolver.setPrefix("/WEB-INF/pages/");
         resolver.setSuffix(".jsp");
         resolver.setOrder(2);
-//        String[] names = {"*.jsp"};
-//        resolver.setViewNames(names);
         return resolver;
     }
 
@@ -44,8 +40,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         ThymeleafViewResolver thymeleafViewResolver = new ThymeleafViewResolver();
         thymeleafViewResolver.setTemplateEngine(templateEngine());
         thymeleafViewResolver.setOrder(1);
-//        String[] names = {"*.html", "*.xhtml"};
-//        thymeleafViewResolver.setViewNames(names);
+        String[] excludeViews = {"*.jsp", "index"};
+        thymeleafViewResolver.setExcludedViewNames(excludeViews);
         return thymeleafViewResolver;
     }
 
