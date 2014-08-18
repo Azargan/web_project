@@ -18,7 +18,7 @@ public class Neo4jConfig extends Neo4jConfiguration {
     final private String DB_PATH = "D:\\test.db";
 
     @Bean(destroyMethod = "shutdown")
-    GraphDatabaseService graphDatabaseService() {
+    public GraphDatabaseService graphDatabaseService() {
         setBasePackage("by.azargan.data");
         return new GraphDatabaseFactory().newEmbeddedDatabase(DB_PATH);
     }

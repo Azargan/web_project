@@ -6,6 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
+        <div th:if="${#httpServletRequest.remoteUser != null}">
+            <p th:text="${#httpServletRequest.remoteUser}">
+                sample_user
+            </p>
+        </div>
         <div>Hello, Thymeleaf!</div>
     </body>
 </html>
